@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homey Widget</title>
+    <script src="globe.gl.min.js"></script>
+    <script src="d3.v6.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body id="select">
+
+    <div class="back-banner" id="banner">
+
+        <div class="iss-stats" id="iss-stats">
+            <div class="iss-head"><!--ISS Tracker--></div>
+        </div>
+        <div class="iss-icon"></div>
+
+        <div id="globeContainer">
+            <div id="globeViz"></div>
+        </div>
+
+    </div>
+
+    <script>
+      function onHomeyReady(Homey) {
+        Homey.ready();
+      
+      }
+      
+      
+        const globe = Globe()
+            .globeImageUrl('img/earth-blue-marble.jpg')
+            .bumpImageUrl('img/earth-topology.png')
+            .pointAltitude(0.2)
+            .pointColor(() => 'rgba(255,255,255,0.75)')
+            .pointRadius(0.2)
+            .pointsTransitionDuration(0)
+            .labelColor(() => 'black')
+            .labelSize(0.4)
+            .labelDotRadius(0.3)
+            .atmosphereAltitude(0.15)
+            .backgroundColor('rgba(0,0,0,0)')
+            .width(500)
+            .height(500)
+            (document.getElementById('globeViz'));
+
+        // Disable auto-rotate
+        globe.controls().autoRotate = false;
+
+        // Function to calculate offset position
+        function calculateOffsetPosition(lat, lng, offsetDegrees) {
+            const offsetLat = lat - offsetDegrees;
+            return { lat: offsetLat, lng: lng };
+        }
+
+        // Function to update ISS position, altitude, and velocity
+        function updateISSPosition() {
+            fetch('https://api.wheretheiss.at/v1/satellites/25544')
+                .then(response => response.json())
+                .then(data => {
+                    const lat = data.latitude;
+                    const lng = data.longitude;
+                    const altitude = data.altitude.toFixed(2);  // Altitude in kilometers
+                    const velocity = data.velocity.toFixed(2);  // Velocity in km/h
+        
+                    // Determine if the latitude is North or South
+                    const latDirection = lat >= 0 ? 'N' : 'S';
+                    const formattedLat = Math.abs(lat).toFixed(1); // Get absolute value and format
+        
+                    // Determine if the longitude is East or West
+                    const lngDirection = lng >= 0 ? 'E' : 'W';
+                    const formattedLng = Math.abs(lng).toFixed(1); // Get absolute value and format
+        
+                    // Update the ISS location on the globe
+                    globe.pointsData([{
+                        lat: lat,
+                        lng: lng,
+                        label: `ISS\nLat: ${formattedLat}\nLong: ${formattedLng}`
+                    }]);
+        
+                    // Update the ISS stats with live altitude, velocity, latitude, and longitude
+                    const issStatsElement = document.getElementById('iss-stats');
+                    issStatsElement.innerHTML = `
+                        <div class="iss-head">ISS <span class="blink red">•</span></div>
+                        <div class="iss-subtitle">ALTITUDE</div>
+                        <div class="iss-title">${altitude}<span class="iss-title-end"> km</span></div>
+                        <div class="iss-subtitle">VELOCITY</div>
+                        <div class="iss-title">${velocity}<span class="iss-title-end"> km/h</span></div>
+                        <div class="iss-subtitle">LOCATION</div>
+                        <div class="iss-title">${formattedLat}&deg;<span class="iss-title-end">${latDirection}</span> ${formattedLng}&deg;<span class="iss-title-end">${lngDirection}</span></div>
+                    `;
+        
+                    // Calculate offset position (35 degrees south of ISS)
+                    const offsetPosition = calculateOffsetPosition(lat, lng, 0);
+        
+                    // Center the view on the offset position with animation
+                    globe.pointOfView({ lat: offsetPosition.lat, lng: offsetPosition.lng, altitude: 2.3 }, 1000);
+                })
+                .catch(error => console.error('Error fetching ISS data:', error));
+        }
+
+
+        // Update ISS position, altitude, and velocity every 5 seconds
+        updateISSPosition();
+        setInterval(updateISSPosition, 5000);
+    </script>
+
+
+
+</body>
+</html>

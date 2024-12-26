@@ -1,0 +1,1 @@
+Ulepsz swój pulpit Homey za pomocą pięknych widżetów, które informują Cię przez cały dzień. Ta aplikacja oferuje eleganckie zegary, szczegółową prognozę pogody, czasy wschodu i zachodu słońca oraz wiele więcej, wszystko na pierwszy rzut oka. Stwórz pulpit, który jest zarówno funkcjonalny, jak i estetyczny, pomagając Ci z łatwością być na bieżąco z najważniejszymi informacjami.

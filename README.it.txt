@@ -1,0 +1,1 @@
+Migliora il tuo Homey Dashboard con bellissimi widget che ti tengono informato durante tutto il giorno. Questa app offre eleganti display per l'orologio, previsioni meteorologiche dettagliate, orari di alba e tramonto e altro ancora, tutto a colpo d'occhio. Crea un dashboard funzionale e visivamente attraente, aiutandoti a rimanere al passo con le cose essenziali con facilità.

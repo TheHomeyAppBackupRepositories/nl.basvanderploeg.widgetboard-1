@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="en"><head><script type="text/javascript" src="/js/crossframe.js"></script><script type="module" src="/widgets/js/homey.widgets.js"></script><link rel="stylesheet" href="/widgets/css/homey.widgets.css"><meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Widget</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    
+    <div class="back-banner" id="banner">
+       
+       <div id="calendar" class="calendar-container"></div>
+       
+    </div>
+
+    <script>
+       function onHomeyReady(Homey) {
+           Homey.ready();
+           const settings = Homey.getSettings();
+           const weekStart = settings.weekStart;
+           
+           let firstDayOfWeek = weekStart; // Change this to "sunday" if needed
+            
+           // const shortDayNames = {
+           //     monday: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+           //     sunday: ['Sun', 'Mno', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+           // };
+           
+           const shortDayNames = {
+                  monday: [Homey.__("day_mon"), Homey.__("day_tue"), Homey.__("day_wed"), Homey.__("day_thu"), Homey.__("day_fri"), Homey.__("day_sat"), Homey.__("day_sun")],
+                  sunday: [Homey.__("day_sun"), Homey.__("day_mon"), Homey.__("day_tue"), Homey.__("day_wed"), Homey.__("day_thu"), Homey.__("day_fri"), Homey.__("day_sat")]
+              };
+           
+           
+           function createCalendar() {
+               const now = new Date();
+               const currentYear = now.getFullYear();
+               const currentMonth = now.getMonth();
+               const currentDay = now.getDate();
+               const currentDayOfWeek = now.getDay();
+           
+               const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+               const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+           
+               const daysInMonth = lastDayOfMonth.getDate();
+               let startingDayOfWeek = firstDayOfMonth.getDay();
+               
+               if (firstDayOfWeek === "monday") {
+                   startingDayOfWeek = (startingDayOfWeek + 6) % 7;
+               }
+               
+               // const monthNames = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+               // const dayNames = firstDayOfWeek === "monday" 
+               //   ? ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+               //   : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];            
+           
+               const monthNames = [Homey.__("month_january"), Homey.__("month_february"), Homey.__("month_march"), Homey.__("month_april"), Homey.__("month_may"), Homey.__("month_june"), Homey.__("month_july"), Homey.__("month_august"), Homey.__("month_september"), Homey.__("month_october"), Homey.__("month_november"), Homey.__("month_december")];
+               const dayNames = firstDayOfWeek === "monday" 
+                   ? [Homey.__("day_monday"), Homey.__("day_tuesday"), Homey.__("day_wednesday"), Homey.__("day_thursday"), Homey.__("day_friday"), Homey.__("day_saturday"), Homey.__("day_sunday")]
+                   : [Homey.__("day_sunday"), Homey.__("day_monday"), Homey.__("day_tuesday"), Homey.__("day_wednesday"), Homey.__("day_thursday"), Homey.__("day_friday"), Homey.__("day_saturday")];
+           
+               let calendarHTML = `
+                   <div class="calendar-header">
+                       <div class="current-day">${currentDay}</div>
+                       <div class="month-year">
+                           <div class="current-month">${monthNames[currentMonth]}</div>
+                           <div class="current-weekday">${dayNames[firstDayOfWeek === "monday" ? (currentDayOfWeek + 6) % 7 : currentDayOfWeek]}</div>
+                       </div>
+                   </div>
+                   <div class="calendar-body">
+                       <div class="weekday-header">
+                           ${shortDayNames[firstDayOfWeek].map((day, index) => 
+                               `<div class="${(firstDayOfWeek === "monday" ? (index + 1) % 7 : index) === currentDayOfWeek ? 'current-weekday' : ''} 
+                                           ${(firstDayOfWeek === "monday" && (index === 5 || index === 6)) || 
+                                             (firstDayOfWeek === "sunday" && (index === 0 || index === 6)) ? 'weekend' : ''}">
+                                   ${day}
+                               </div>`
+                           ).join('')}
+                       </div>
+                       <div class="calendar-days">
+               `;
+           
+               // Previous month's days
+               const daysInPreviousMonth = new Date(currentYear, currentMonth, 0).getDate();
+               for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+                   const dayOfWeek = (startingDayOfWeek - 1 - i + 7) % 7;
+                   const isWeekend = (firstDayOfWeek === "monday" && (dayOfWeek === 5 || dayOfWeek === 6)) ||
+                                     (firstDayOfWeek === "sunday" && (dayOfWeek === 0 || dayOfWeek === 6));
+                   calendarHTML += `<div class="calendar-day other-month ${isWeekend ? 'weekend' : ''}">${daysInPreviousMonth - i}</div>`;
+               }
+           
+               // Current month's days
+               for (let day = 1; day <= daysInMonth; day++) {
+                   const date = new Date(currentYear, currentMonth, day);
+                   let dayOfWeek = firstDayOfWeek === "monday" ? (date.getDay() + 6) % 7 : date.getDay();
+                   const isCurrentDay = day === currentDay;
+                   const isWeekend = (firstDayOfWeek === "monday" && (dayOfWeek === 5 || dayOfWeek === 6)) ||
+                                     (firstDayOfWeek === "sunday" && (dayOfWeek === 0 || dayOfWeek === 6));
+                   calendarHTML += `
+                       <div class="calendar-day ${isCurrentDay ? 'current-date' : ''} ${isWeekend ? 'weekend' : ''}" data-day="${day}">
+                           ${day}
+                       </div>
+                   `;
+               }
+           
+               // Next month's days
+               const totalCells = 42; // 6 rows * 7 days
+               const remainingCells = totalCells - (startingDayOfWeek + daysInMonth);
+               for (let day = 1; day <= remainingCells; day++) {
+                   const dayOfWeek = (startingDayOfWeek + daysInMonth + day - 1) % 7;
+                   const isWeekend = (firstDayOfWeek === "monday" && (dayOfWeek === 5 || dayOfWeek === 6)) ||
+                                     (firstDayOfWeek === "sunday" && (dayOfWeek === 0 || dayOfWeek === 6));
+                   calendarHTML += `<div class="calendar-day other-month ${isWeekend ? 'weekend' : ''}">${day}</div>`;
+               }
+           
+               calendarHTML += '</div></div>';
+           
+               document.getElementById('calendar').innerHTML = calendarHTML;
+           }
+           
+           function updateDate() {
+               const now = new Date();
+               const currentDay = now.getDate();
+               const currentMonth = now.getMonth();
+               const currentYear = now.getFullYear();
+               const currentDayOfWeek = now.getDay();
+           
+               // const monthNames = ["January", "February", "March", "April", "May", "June",
+               //     "July", "August", "September", "October", "November", "December"];
+               // const dayNames = firstDayOfWeek === "monday" 
+               //     ? ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+               //     : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                   
+               const monthNames = [Homey.__("month_january"), Homey.__("month_february"), Homey.__("month_march"), Homey.__("month_april"), Homey.__("month_may"), Homey.__("month_june"), Homey.__("month_july"), Homey.__("month_august"), Homey.__("month_september"), Homey.__("month_october"), Homey.__("month_november"), Homey.__("month_december")];
+                  const dayNames = firstDayOfWeek === "monday" 
+                      ? [Homey.__("day_monday"), Homey.__("day_tuesday"), Homey.__("day_wednesday"), Homey.__("day_thursday"), Homey.__("day_friday"), Homey.__("day_saturday"), Homey.__("day_sunday")]
+                      : [Homey.__("day_sunday"), Homey.__("day_monday"), Homey.__("day_tuesday"), Homey.__("day_wednesday"), Homey.__("day_thursday"), Homey.__("day_friday"), Homey.__("day_saturday")];    
+           
+               // Update header
+               document.querySelector('.current-day').textContent = currentDay;
+               document.querySelector('.current-month').textContent = monthNames[currentMonth];
+               document.querySelector('.current-weekday').textContent = dayNames[firstDayOfWeek === "monday" ? (currentDayOfWeek + 6) % 7 : currentDayOfWeek];
+           
+               // Update calendar grid
+               document.querySelectorAll('.calendar-day').forEach(dayElement => {
+                   dayElement.classList.remove('current-date');
+                   if (dayElement.dataset.day == currentDay) {
+                       dayElement.classList.add('current-date');
+                   }
+               });
+           
+               // Check if month has changed
+               if (currentDay === 1 || document.querySelector('.calendar-day[data-day="1"]').classList.contains('other-month')) {
+                   createCalendar(); // Recreate the entire calendar if it's a new month
+               }
+           }
+           
+           createCalendar();
+           setInterval(updateDate, 60000); // Update every minute
+         }
+
+
+       
+    </script>
+
+</body></html>

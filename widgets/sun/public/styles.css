@@ -1,0 +1,250 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+html {
+  overflow: hidden;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Roboto", system, -apple-system, "Helvetica Neue", Helvetica, sans-serif;
+    background-color: none;
+    color: #1C1C1C;
+    max-width: 800px;
+    margin: auto;
+    -webkit-user-select: none; 
+    user-select: none;
+    cursor: default;
+}
+
+.selectable{
+  -webkit-user-select: auto; /* Safari */
+  user-select: auto;
+  cursor: auto;
+}
+
+.back-banner {
+    width: 100%;
+    height: 120px;
+    /* background-color: #1F2029; */
+    color: white;
+    padding: 0px;
+    position: relative;
+    border-radius: 0px;
+    overflow: hidden;
+    
+    display: flex;
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;      /* Centers vertically */
+}
+
+.transparent {
+    background-color: inherit;
+    color: inherit;
+}
+
+.hidden {
+    display: none;
+}
+
+.widget-title {
+   font-size: 20px;
+   font-weight: 600;
+   line-height: 24px;
+   color: #1C1C1C;
+   margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.container {
+  background-image: linear-gradient(180deg, #073792 0%, #D0B2A1 100%);
+  border-radius: 0px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0px;
+  max-width: 800px;
+  width: 100%;
+  height: 120px; /* Increased height to accommodate extra padding */
+  position: relative;
+  box-sizing: border-box;
+}
+.graph {
+  width: 100%;
+  height: 180px; /* Increased height */
+}
+.sun-path-above {
+  fill: none;
+  //stroke: #C7D1FF;
+  stroke-width: 4;
+}
+.sun-path-below {
+  fill: none;
+  //stroke: rgba(0,0,0,0.25);
+  stroke-width: 4;
+}
+.horizon-line {
+  stroke: #9092B5;
+  stroke-width: 4;
+}
+.current-position {
+  stroke-width: 2;
+  transition: cx 0.5s, cy 0.5s;
+}
+.current-position-above {
+  fill: #FFFFFF;
+  stroke: #FFFFFF;
+}
+.current-position-below {
+  fill: #88849E;
+  stroke: #FFFFFF;
+}
+.time-label {
+  position: absolute;
+  color: #FFFFFF;
+  font-size: 20px;
+  /* font-size: var(--homey-font-size-large); */
+  line-height: 20px;
+  font-weight: 600;
+  padding: 0px;
+  top: 16px;
+}
+.sunrise {
+  left: 16px;
+}
+.sunset {
+  right: 16px;
+}
+.next-event-label {
+  /* height: 30px; */
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 500;
+  font-size: 17px;
+  /* font-size: var(--homey-font-size-default); */
+  /* line-height: 18px; */
+  color: #FFFFFF;
+  text-shadow: 0 2px 10px rgba(137,117,121,0.80);
+  background-color: none;
+  vertical-align: middle;
+}
+
+
+.icon-sun{
+  background-image: url('./img/icon-sun.svg');
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  background-position: center;
+  display:inline-block;
+  background-color: none;
+  vertical-align: middle;
+}
+
+.icon-moon{
+  background-image: url('./img/icon-moon.svg');
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  background-position: center;
+  display:inline-block;
+  background-color: none;
+  vertical-align: middle;
+}
+
+
+.sun-arrow {
+  opacity: 0.5;
+}
+
+
+
+
+
+.icon-text {
+    display: inline-flex; /* Ensures the icon and text are inline */
+    align-items: center;  /* Vertically aligns the icon and text */
+}
+
+
+
+
+
+
+
+.refresh-button {
+    position: absolute;
+    bottom: -44px;
+    right: 14px;
+    background-color: rgba(255,255,255,0.3);
+    box-shadow: 0 4px 17px 0 rgba(0,0,0,0.04), 0 2px 5px 0 rgba(0,0,0,0.05), 0 2px 2px 0 rgba(0,0,0,0.02);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: bottom 0.3s ease-out, background-color 0.3s;
+    z-index: 1000;
+    font-size: 26px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+.refresh-button:hover {
+    background-color: rgba(255,255,255,0.4);
+}
+.back-banner:hover .refresh-button {
+    bottom: 14px;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+
+
+
+
+.info-banner{
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    background-color: white;
+    color: black;
+    position: relative;
+    margin-top: 14px;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+
+
+
+
+
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #111218;
+    color: white;
+  }
+  .widget-title {color: white;}
+  .container{background-image: linear-gradient(180deg, #073792 0%, #D0B2A1 100%);}
+
+}

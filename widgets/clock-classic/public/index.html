@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homey Widget</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body id="select">
+
+
+    <div class="back-banner" id="banner">
+       
+       <div id="clocks-container"></div>
+       
+    </div>
+
+    
+    
+    
+    
+<script>
+      function onHomeyReady(Homey) {
+        Homey.ready();
+      }
+    
+      const timeZones = [
+        { label: 'Local', timeZone: undefined, style: 'big-retro' }
+      ];
+    
+      function createClock(timeZone) {
+        const container = document.createElement('div');
+        container.classList.add('clock-container');
+    
+        const clock = document.createElement('div');
+        clock.classList.add('clock', timeZone.style);
+    
+        const infoBottom = document.createElement('div');
+        infoBottom.classList.add('clock-info-top');
+        infoBottom.innerText = timeZone.label;
+    
+        const handsWrapper = document.createElement('div');
+        handsWrapper.classList.add('hands-wrapper');
+    
+        const hourHand = document.createElement('div');
+        hourHand.classList.add('hand', 'hour');
+        handsWrapper.appendChild(hourHand);
+    
+        const minuteHand = document.createElement('div');
+        minuteHand.classList.add('hand', 'minute');
+        handsWrapper.appendChild(minuteHand);
+    
+        const secondHand = document.createElement('div');
+        secondHand.classList.add('hand', 'second');
+        handsWrapper.appendChild(secondHand);
+    
+        clock.appendChild(handsWrapper);
+        container.appendChild(clock);
+        document.getElementById('clocks-container').appendChild(container);
+    
+        return { hourHand, minuteHand, secondHand, clock };
+      }
+    
+      function getTime() {
+        const now = new Date();
+        return {
+          hours: now.getHours(),
+          minutes: now.getMinutes(),
+          totalSeconds: now.getSeconds() + now.getMilliseconds() / 1000
+        };
+      }
+    
+      function updateClocks(clocks) {
+        clocks.forEach(({ hourHand, minuteHand, secondHand, clock }) => {
+          const { hours, minutes, totalSeconds } = getTime();
+    
+          const hourRotation = (hours % 12) * 30 + (minutes / 60) * 30;
+          const minuteRotation = minutes * 6 + (totalSeconds / 60) * 6;
+          const secondRotation = totalSeconds * 6;
+    
+          hourHand.style.transform = `translateX(-50%) rotate(${hourRotation}deg)`;
+          minuteHand.style.transform = `translateX(-50%) rotate(${minuteRotation}deg)`;
+          secondHand.style.transform = `translateX(-50%) rotate(${secondRotation}deg)`;
+    
+          if (hours >= 18 || hours < 6) {
+            clock.classList.add('dark');
+          } else {
+            clock.classList.remove('dark');
+          }
+        });
+    
+        requestAnimationFrame(() => updateClocks(clocks));
+      }
+    
+      const clocks = timeZones.map(createClock);
+      updateClocks(clocks);
+    </script>
+
+    
+    
+    
+
+
+
+
+    <script>
+        function adjustFontSize() {
+          var divABC = document.getElementById('banner');
+          var divTarget = document.getElementById('clocks-container');
+        
+          var widthABC = divABC.offsetWidth; // Get the width of div-abc
+          var fontSize = widthABC / 25; // Calculate the font size
+        
+          divTarget.style.fontSize = fontSize + 'px'; // Set the font size
+        }
+        
+        // Run the function on page load
+        window.onload = adjustFontSize;
+        
+        // Optionally, run the function when the window is resized
+        window.onresize = adjustFontSize;
+    
+    </script>
+    
+
+
+
+</body>
+</html>
+

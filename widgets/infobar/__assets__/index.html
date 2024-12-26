@@ -1,0 +1,210 @@
+<!DOCTYPE html><html lang="en"><head><script type="text/javascript" src="/js/crossframe.js"></script><script type="module" src="/widgets/js/homey.widgets.js"></script><link rel="stylesheet" href="/widgets/css/homey.widgets.css"><meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Widget</title>
+    <style>
+        body {
+            font-family: Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #F4F4FA;
+            color: white;
+        }
+        .widget{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1F2029;
+            border-radius: 25px;
+            padding: 10px 16px;
+            width: 100%;
+            height: 50px;
+            overflow: hidden;
+        }
+        .weather {
+            display: flex;
+            align-items: center;
+        }
+        .weather img {
+            width: 24px;
+            height: 24px;
+        }
+        .weather-icon {
+           width: 24px;
+           height: 24px;
+           margin-right: 6px;
+           background-color: none;
+        }
+        .temperature {
+            font-size: 20px;
+            font-weight: 500;
+        }
+        .date-time {
+            text-align: right;
+        }
+        .date {
+            font-size: 17px;
+        }
+        .time {
+            font-size: 17px;
+            font-weight: 500;
+            margin-left: 6px;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+          body {
+            background-color: #111218;
+          }        
+        }
+    </style>
+</head>
+<body>
+    <div class="widget">
+        <div class="weather">
+           <div class="weather-icon">
+             <img id="weather-icon" src="" alt="Weather Icon">
+           </div>
+            <span class="temperature" id="temperature"></span>
+        </div>
+        <div class="date-time">
+            <span class="date" id="date"></span>
+            <span class="time" id="time"></span>
+        </div>
+    </div>
+
+    <script>
+      
+
+        function onHomeyReady(Homey) {
+            Homey.api('GET', '/location')
+                .then(location => {                 
+                    const settings = Homey.getSettings();
+                    const tempUnit = settings.tempUnit;
+                    API_URL = `https://api.open-meteo.com/v1/forecast?latitude=${location.lat}&longitude=${location.lng}&current=temperature_2m,weathercode,is_day&timezone=auto&temperature_unit=${tempUnit}`;
+                    updateWeather();
+                    setInterval(updateWeather, 600000);
+                    updateDateTime();
+                    setInterval(updateDateTime, 1000);
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+                .finally(() => {
+                    Homey.ready();
+                });
+        }
+
+        const weatherIcons = {
+            0: 'clear.png',
+            1: 'mostly-clear.png',
+            2: 'partly-cloudy.png',
+            3: 'overcast.png',
+            45: 'fog.png',
+            48: 'rime-fog.png',
+            51: 'light-drizzle.png',
+            53: 'moderate-drizzle.png',
+            55: 'dense-drizzle.png',
+            61: 'light-rain.png',
+            63: 'moderate-rain.png',
+            65: 'heavy-rain.png',
+            71: 'slight-snowfall.png',
+            73: 'moderate-snowfall.png',
+            75: 'heavy-snowfall.png',
+            77: 'snow.png',
+            80: 'light-rain.png',
+            81: 'moderate-rain.png',
+            82: 'heavy-rain.png',
+            85: 'slight-snowfall.png',
+            86: 'heavy-snowfall.png',
+            95: 'thunderstorm.png',
+            96: 'thunderstorm-with-hail.png',
+            99: 'thunderstorm-with-hail.png'
+        };
+
+        async function fetchWeatherData() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+                return null;
+            }
+        }
+
+        async function updateWeather() {
+            const weatherData = await fetchWeatherData();
+            if (weatherData) {
+                const temperature = Math.round(weatherData.current.temperature_2m);
+                const weatherCode = weatherData.current.weathercode;
+                const isDay = weatherData.current.is_day;
+               
+                const settings = Homey.getSettings();
+                const tempUnitLetter = settings.tempUnit === 'celsius' ? '°C' : '°F';
+
+                document.getElementById('temperature').textContent = `${temperature}${tempUnitLetter}`;
+
+                let iconName = weatherIcons[weatherCode] || 'unknown.png';
+                if (!isDay) {
+                    iconName = iconName.replace('.png', '_night.png');
+                }
+                document.getElementById('weather-icon').src = `./img/icons/${iconName}`;
+            }
+        }
+
+        function formatTime(date) {
+            const settings = Homey.getSettings();
+            const timeFormat = settings.timeUnit;
+            //const timeFormat = 'time12'; // Can be 'time24' or 'time12'
+            
+            if (timeFormat === 'time24') {
+                // 24-hour format
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                return `${hours}:${minutes}`;
+            } else {
+                // 12-hour format with AM/PM
+                let hours = date.getHours();
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                
+                // Convert to 12-hour format
+                hours = hours % 12;
+                hours = hours ? hours : 12; // '0' should be converted to '12'
+                
+                return `${hours}:${minutes} ${ampm}`;
+            }
+        }
+
+        function updateDateTime() {
+            // Get user's language (or default to browser language)
+            const userLanguage = navigator.language || navigator.userLanguage;
+
+            // Create a Date object for the current date
+            const currentDate = new Date();
+
+            // Define date formatting options
+            const options = {
+                weekday: 'short',
+                day: 'numeric',
+                month: 'short'
+            };
+
+            // Format the date using the user's language
+            const localizedDate = currentDate.toLocaleDateString(userLanguage, options);
+
+            // Format time based on configuration
+            const formattedTime = formatTime(currentDate);
+
+            // Update date and time in the DOM
+            document.getElementById('date').textContent = localizedDate;
+            document.getElementById('time').textContent = formattedTime;
+        }
+    </script>
+
+</body></html>

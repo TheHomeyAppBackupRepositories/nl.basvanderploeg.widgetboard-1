@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="500px" viewBox="0 0 50 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>min-hand-big-ns-light</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="clock-face-big-dark" transform="translate(-225, 0)" fill="#000000" stroke="#343434" stroke-width="2">
+            <path d="M250,37 C252.485281,37 254.735281,38.0073593 256.363961,39.636039 C257.992641,41.2647186 259,43.5147186 259,46 L259,301 C259,301.552285 258.776142,302.052285 258.414214,302.414214 C258.052285,302.776142 257.552285,303 257,303 L243,303 C242.447715,303 241.947715,302.776142 241.585786,302.414214 C241.223858,302.052285 241,301.552285 241,301 L241,46 C241,43.5147186 242.007359,41.2647186 243.636039,39.636039 C245.264719,38.0073593 247.514719,37 250,37 Z" id="Rectangle"></path>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="500px" viewBox="0 0 80 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>sec-hand-big-retro-yellow</title>
+    <defs>
+        <path d="M250.015748,41 C251.666439,41 253.007019,42.3335421 253.015706,43.9842107 L253.959811,223.288316 C266.994284,225.203944 277,236.433492 277,250 C277,260.993769 270.429397,270.452891 261.000993,274.664565 L261,285 C261,291.075132 256.075132,296 250,296 C243.924868,296 239,291.075132 239,285 L239.000009,274.665013 C229.571068,270.453561 223,260.994158 223,250 C223,236.433492 233.005716,225.203944 246.040189,223.288316 L246.984294,43.9842107 C246.992981,42.3335421 248.333561,41 249.984252,41 L250.015748,41 Z" id="path-1"></path>
+        <filter x="-27.8%" y="-5.9%" width="155.6%" height="111.8%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.504862325 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-2-Copy" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Combined-Shape" transform="translate(-210, 0)">
+            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+            <use fill="#FFCB00" fill-rule="evenodd" xlink:href="#path-1"></use>
+        </g>
+    </g>
+</svg>

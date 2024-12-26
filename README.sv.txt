@@ -1,0 +1,1 @@
+Förbättra din Homey Dashboard med vackra widgets som håller dig informerad hela dagen. Denna app erbjuder eleganta klockvisningar, en detaljerad väderprognos, soluppgångs- och solnedgångstider och mer, allt med en snabb blick. Skapa en dashboard som är både funktionell och visuellt tilltalande, och hjälper dig enkelt hålla koll på det viktigaste.

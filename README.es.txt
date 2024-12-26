@@ -1,0 +1,1 @@
+Mejora tu Panel de Homey con hermosos widgets que te mantienen informado a lo largo del día. Esta app ofrece elegantes relojes, un pronóstico del tiempo detallado, horas de salida y puesta del sol y mucho más, todo de un vistazo. Crea un panel que sea tanto funcional como visualmente atractivo, ayudándote a mantenerte al tanto de lo esencial con facilidad.

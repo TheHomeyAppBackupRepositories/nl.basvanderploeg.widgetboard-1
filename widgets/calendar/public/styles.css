@@ -1,0 +1,239 @@
+html {
+  overflow: hidden;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Roboto", system, -apple-system, "Helvetica Neue", Helvetica, sans-serif;
+    background-color: #F4F4FA;
+    color: #1C1C1C;
+    max-width: 800px;
+    margin: auto;
+    -webkit-user-select: none; 
+    user-select: none;
+    cursor: default;
+}
+
+.selectable{
+  -webkit-user-select: auto; /* Safari */
+  user-select: auto;
+  cursor: auto;
+}
+
+.back-banner {
+    width: 100%;
+    height: 360px;
+    background-color: #1F2029;
+    color: white;
+    padding: 0px;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    
+    display: flex;
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;      /* Centers vertically */
+}
+
+.transparent {
+    background-color: inherit;
+    color: inherit;
+}
+
+.hidden {
+    display: none;
+}
+
+.widget-title {
+   font-size: 20px;
+   font-weight: 600;
+   line-height: 24px;
+   color: #1C1C1C;
+   margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+
+.calendar-container {
+    width: 100%;
+    /* max-width: 350px; */
+    color: #1C1C1C;
+    height: 360px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+.calendar-header {
+    display: flex;
+    /* align-items: flex-start; */
+    align-items: center;
+    margin-bottom: 16px;
+}
+.current-day {
+    font-size: 38px;
+    font-weight: 500;
+    margin-right: 16px;
+}
+.month-year {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+}
+.current-month {
+    font-size: 14px;
+    font-weight: 450;
+    color: #6b7280;
+    text-transform: uppercase;
+}
+.current-weekday {
+    font-size: 17px;
+    font-weight: 500;
+    color: #ef4444;
+}
+.calendar-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.weekday-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 500;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 10px;
+}
+.calendar-days {
+    font-weight: 400;
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 4px;
+}
+.calendar-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+}
+.other-month {
+    color: #9ca3af;
+}
+.current-date {
+    background-color: #0082fa;
+    color: white;
+    font-weight: 500;
+    border-radius: 10px;
+}
+.weekday-header .current-weekday {
+    color: #0082fa;
+}
+
+.weekend {
+    /* color: #1C1C1C; */
+}
+.weekday-header .weekend {
+    /* color: #1C1C1C; */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.refresh-button {
+    position: absolute;
+    bottom: -44px;
+    right: 14px;
+    background-color: rgba(255,255,255,0.3);
+    box-shadow: 0 4px 17px 0 rgba(0,0,0,0.04), 0 2px 5px 0 rgba(0,0,0,0.05), 0 2px 2px 0 rgba(0,0,0,0.02);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: bottom 0.3s ease-out, background-color 0.3s;
+    z-index: 1000;
+    font-size: 26px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+.refresh-button:hover {
+    background-color: rgba(255,255,255,0.4);
+}
+.back-banner:hover .refresh-button {
+    bottom: 14px;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+
+
+
+
+.info-banner{
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    background-color: white;
+    color: black;
+    position: relative;
+    margin-top: 14px;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+
+
+
+
+
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #111218;
+    color: white;
+  }
+  .widget-title {color: white;}
+  
+  
+  .calendar-container {
+    background-color: #1F2029;
+    color: white;
+  }
+  .weekday-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  
+  
+
+}

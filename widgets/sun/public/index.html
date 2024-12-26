@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homey Widget</title>
+  <script src="suncalc.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body id="select">
+
+
+  <div class="back-banner" id="banner">
+     
+     <!-- <button class="refresh-button" id="refresh"onclick="location.reload()">↻</button> -->
+     
+     
+     <div class="container">
+       <div class="time-label sunrise" id="sunriseTime"></div>
+       <div class="time-label sunset" id="sunsetTime"></div>
+       <div class="graph" id="sunHeightGraph"></div>
+       <div class="next-event-label" id="nextEventTime"></div>
+     </div>
+     
+  </div>
+
+
+
+
+  <script type="text/javascript">
+    let lat;
+    let lng;
+    const sunRadius = 10;
+    let sunMarker;
+    let graphData;
+
+    function onHomeyReady(Homey) {
+      Homey.api('GET', '/location')
+        .then(location => {
+          lat = location.lat;
+          lng = location.lng;
+          initializeGraph();
+        })
+        .catch(err => {
+          document.write(err);
+        })
+        .finally(() => {
+          Homey.ready();
+        });
+    }
+
+    function initializeGraph() {
+      createGraph();
+      setInterval(updateSunPosition, 5000);
+    }
+
+    function getSunHeight(date, lat, lng) {
+      const sunPosition = SunCalc.getPosition(date, lat, lng);
+      return sunPosition.altitude * (180 / Math.PI);
+    }
+
+    function generateData() {
+      const data = [];
+      const now = new Date();
+      const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      for (let i = 0; i <= 24 * 60; i++) {
+        const date = new Date(startOfDay.getTime() + i * 60000);
+        const height = getSunHeight(date, lat, lng);
+        data.push({ x: i / 60, y: height });
+      }
+
+      const currentHour = (now - startOfDay) / 3600000;
+      const currentHeight = getSunHeight(now, lat, lng);
+
+      const times = SunCalc.getTimes(now, lat, lng);
+      const sunrise = times.sunrise;
+      const sunset = times.sunset;
+
+      return { data, currentPosition: { x: currentHour, y: currentHeight }, sunrise, sunset };
+    }
+
+    function createSVGPath(data, width, height, isAboveHorizon) {
+      const xScale = width / 24;
+      const yMin = Math.min(...data.map(d => d.y));
+      const yMax = Math.max(...data.map(d => d.y));
+      const yRange = yMax - yMin;
+      const yScale = height / (yRange * 1.1);
+
+      let path = '';
+      let isDrawing = false;
+
+      data.forEach((point) => {
+        const x = point.x * xScale;
+        const y = height - (point.y - yMin) * yScale;
+
+        if ((isAboveHorizon && point.y >= 0) || (!isAboveHorizon && point.y < 0)) {
+          if (!isDrawing) {
+            path += `M${x},${y}`;
+            isDrawing = true;
+          } else {
+            path += `L${x},${y}`;
+          }
+        } else if (isDrawing) {
+          isDrawing = false;
+        }
+      });
+
+      return path;
+    }
+
+    function formatTime(date) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function createGraph() {
+      graphData = generateData();
+      const { data, currentPosition, sunrise, sunset } = graphData;
+      const graph = document.getElementById('sunHeightGraph');
+      const width = graph.offsetWidth;
+      const height = 120;
+      const padding = { top: 25, right: 0, bottom: 25, left: 0 };
+      const graphWidth = width - padding.left - padding.right;
+      const graphHeight = height - padding.top - padding.bottom;
+
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', width);
+      svg.setAttribute('height', height);
+      svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      defs.innerHTML = `
+      <filter id="drop-shadow-above" x="-200%" y="-200%" width="400%" height="400%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+        <feOffset dx="0" dy="0" result="offsetblur"/>
+        <feFlood flood-color="#FFFFFF" flood-opacity="1"/>
+        <feComposite in2="offsetblur" operator="in"/>
+        <feMerge>
+          <feMergeNode/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <filter id="drop-shadow-below" x="-200%" y="-200%" width="400%" height="400%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+        <feOffset dx="0" dy="0" result="offsetblur"/>
+        <feFlood flood-color="#505050" flood-opacity="0.5"/>
+        <feComposite in2="offsetblur" operator="in"/>
+        <feMerge>
+          <feMergeNode/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <linearGradient id="sunPathGradientAbove" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:#C7D1FF;stop-opacity:1" />
+        <stop offset="50%" style="stop-color:#E6ECFF;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#C7D1FF;stop-opacity:1" />
+      </linearGradient>
+      <linearGradient id="sunPathGradientBelow" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#515275;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#9B807C;stop-opacity:0.8" />
+      </linearGradient>
+    `;
+      svg.appendChild(defs);
+
+      const yMin = Math.min(...data.map(d => d.y));
+      const yMax = Math.max(...data.map(d => d.y));
+      const yRange = yMax - yMin;
+      const yScale = graphHeight / (yRange * 1.1);
+
+      const pathAbove = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      pathAbove.setAttribute('d', createSVGPath(data, graphWidth, graphHeight, true));
+      pathAbove.setAttribute('transform', `translate(${padding.left}, ${padding.top})`);
+      pathAbove.classList.add('sun-path-above');
+      pathAbove.setAttribute('stroke', 'url(#sunPathGradientAbove)');
+      svg.appendChild(pathAbove);
+
+      const pathBelow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      pathBelow.setAttribute('d', createSVGPath(data, graphWidth, graphHeight, false));
+      pathBelow.setAttribute('transform', `translate(${padding.left}, ${padding.top})`);
+      pathBelow.classList.add('sun-path-below');
+      pathBelow.setAttribute('stroke', 'url(#sunPathGradientBelow)');
+      svg.appendChild(pathBelow);
+
+      const horizonY = height - padding.bottom - (0 - yMin) * yScale;
+      const horizonLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      horizonLine.setAttribute('x1', padding.left);
+      horizonLine.setAttribute('y1', horizonY);
+      horizonLine.setAttribute('x2', width - padding.right);
+      horizonLine.setAttribute('y2', horizonY);
+      horizonLine.classList.add('horizon-line');
+      svg.appendChild(horizonLine);
+
+      const currentX = padding.left + (currentPosition.x / 24) * graphWidth;
+      const currentY = height - padding.bottom - (currentPosition.y - yMin) * yScale;
+      sunMarker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      sunMarker.setAttribute('cx', currentX);
+      sunMarker.setAttribute('cy', currentY);
+      sunMarker.setAttribute('r', sunRadius);
+      sunMarker.classList.add('current-position');
+      if (currentPosition.y >= 0) {
+        sunMarker.classList.add('current-position-above');
+        sunMarker.setAttribute('filter', 'url(#drop-shadow-above)');
+      } else {
+        sunMarker.classList.add('current-position-below');
+        sunMarker.setAttribute('filter', 'url(#drop-shadow-below)');
+      }
+      svg.appendChild(sunMarker);
+
+      graph.innerHTML = '';
+      graph.appendChild(svg);
+
+      updateTimeLabels();
+      updateSunPosition();
+    }
+
+    function updateSunPosition() {
+      const now = new Date();
+      const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const currentHour = (now - startOfDay) / 3600000;
+      const currentHeight = getSunHeight(now, lat, lng);
+
+      const { data } = graphData;
+      const graph = document.getElementById('sunHeightGraph');
+      const width = graph.offsetWidth;
+      const height = 120;
+      const padding = { top: 25, right: 0, bottom: 25, left: 0 };
+      const graphWidth = width - padding.left - padding.right;
+      const graphHeight = height - padding.top - padding.bottom;
+
+      const yMin = Math.min(...data.map(d => d.y));
+      const yMax = Math.max(...data.map(d => d.y));
+      const yRange = yMax - yMin;
+      const yScale = graphHeight / (yRange * 1.1);
+
+      const currentX = padding.left + (currentHour / 24) * graphWidth;
+      const currentY = height - padding.bottom - (currentHeight - yMin) * yScale;
+
+      sunMarker.setAttribute('cx', currentX);
+      sunMarker.setAttribute('cy', currentY);
+      sunMarker.classList.remove('current-position-above', 'current-position-below');
+      if (currentHeight >= 0) {
+        sunMarker.classList.add('current-position-above');
+        sunMarker.setAttribute('filter', 'url(#drop-shadow-above)');
+      } else {
+        sunMarker.classList.add('current-position-below');
+        sunMarker.setAttribute('filter', 'url(#drop-shadow-below)');
+      }
+
+      updateTimeLabels();
+    }
+
+    function updateTimeLabels() {
+      const now = new Date();
+      const todayTimes = SunCalc.getTimes(now, lat, lng);
+      const tomorrowTimes = SunCalc.getTimes(new Date(now.getTime() + 24 * 60 * 60 * 1000), lat, lng);
+
+      const sunrise = todayTimes.sunrise;
+      const sunset = todayTimes.sunset;
+
+      document.getElementById('sunriseTime').innerHTML = `${formatTime(sunrise)}<span class="sun-arrow">↑</span>`;
+      document.getElementById('sunsetTime').innerHTML = `<span class="sun-arrow">↓</span>${formatTime(sunset)}`;
+
+      let nextEvent, timeDiff, arrow;
+
+      if (now > sunset) {
+        nextEvent = tomorrowTimes.sunrise;
+        arrow = '↑';
+      } else if (now < sunrise) {
+        nextEvent = sunrise;
+        arrow = '↑';
+      } else {
+        nextEvent = sunset;
+        arrow = '↓';
+      }
+
+      timeDiff = nextEvent - now;
+      document.getElementById('nextEventTime').textContent = `${arrow} ${formatTimeDiff(timeDiff)}`;
+    }
+
+    function formatTimeDiff(timeDiff) {
+      const hours = Math.floor(timeDiff / 3600000);
+      const minutes = Math.floor((timeDiff % 3600000) / 60000);
+      return `${hours} HRS, ${minutes.toString().padStart(1, '0')} MIN`;
+    }
+
+    window.addEventListener('load', () => {
+      // The graph will be created by onHomeyReady when it's called
+    });
+    window.addEventListener('resize', createGraph);
+
+  </script>
+
+
+
+</body>
+
+</html>
