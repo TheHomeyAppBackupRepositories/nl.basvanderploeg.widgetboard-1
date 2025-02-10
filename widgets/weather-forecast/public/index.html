@@ -121,13 +121,17 @@
             51: 'light-drizzle.png',
             53: 'moderate-drizzle.png',
             55: 'dense-drizzle.png',
+            56: 'light-freezing-drizzle.png',
+            57: 'dense-freezing-drizzle.png',
             61: 'light-rain.png',
             63: 'moderate-rain.png',
             65: 'heavy-rain.png',
+            66: 'light-freezing-rain.png',
+            67: 'heavy-freezing-rain.png',
             71: 'slight-snowfall.png',
             73: 'moderate-snowfall.png',
             75: 'heavy-snowfall.png',
-            77: 'snow.png',
+            77: 'snowflake.png',
             80: 'light-rain.png',
             81: 'moderate-rain.png',
             82: 'heavy-rain.png',
@@ -383,9 +387,13 @@
                 51: Homey.__("weather_light_drizzle"),
                 53: Homey.__("weather_moderate_drizzle"),
                 55: Homey.__("weather_dense_drizzle"),
+                56: Homey.__("weather_light_freezing_drizzle"),
+                57: Homey.__("weather_dense_freezing_drizzle"),
                 61: Homey.__("weather_light_rain"),
                 63: Homey.__("weather_moderate_rain"),
                 65: Homey.__("weather_heavy_rain"),
+                66: Homey.__("weather_light_freezing_rain"),
+                67: Homey.__("weather_heavy_freezing_rain"),
                 71: Homey.__("weather_light_snowfall"),
                 73: Homey.__("weather_moderate_snowfall"),
                 75: Homey.__("weather_heavy_snowfall"),
@@ -411,7 +419,7 @@
             }
 
             currentIcon.innerHTML = `<img src="./img/icons/${iconName}" alt="Huidig weericoon">`;
-            conditionText.textContent = weatherDescriptions[weatherCode] || 'Onbekend';
+            conditionText.textContent = weatherDescriptions[weatherCode] || 'Unknown';
 
             const todayHigh = Math.round(dailyData.temperature_2m_max[0]);
             const todayLow = Math.round(dailyData.temperature_2m_min[0]);

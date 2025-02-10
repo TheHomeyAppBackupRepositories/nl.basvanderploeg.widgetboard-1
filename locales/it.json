@@ -53,5 +53,9 @@
   "month_november": "Novembre",
   "month_december": "Dicembre",
   "weather_moderate_snowfall": "Moderate nevicate",
-  "weather_heavy_snowfall": "Forti nevicate"
+  "weather_heavy_snowfall": "Forti nevicate",
+  "weather_light_freezing_drizzle": "Leggera pioggerella congelante",
+  "weather_dense_freezing_drizzle": "Fitta pioggerella congelante",
+  "weather_light_freezing_rain": "Leggera pioggia congelante",
+  "weather_heavy_freezing_rain": "Forte pioggia congelante"
 }

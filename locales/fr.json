@@ -53,5 +53,9 @@
   "month_november": "Novembre",
   "month_december": "Décembre",
   "weather_moderate_snowfall": "Chute de neige modérée",
-  "weather_heavy_snowfall": "Forte chute de neige"
+  "weather_heavy_snowfall": "Forte chute de neige",
+  "weather_light_freezing_drizzle": "Légère bruine verglaçante",
+  "weather_dense_freezing_drizzle": "Bruine verglaçante dense",
+  "weather_light_freezing_rain": "Légère pluie verglaçante",
+  "weather_heavy_freezing_rain": "Forte pluie verglaçante"
 }

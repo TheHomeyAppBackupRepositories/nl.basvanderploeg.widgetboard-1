@@ -53,5 +53,9 @@
   "month_november": "11월",
   "month_december": "12월",
   "weather_moderate_snowfall": "보통 눈",
-  "weather_heavy_snowfall": "강한 눈"
+  "weather_heavy_snowfall": "강한 눈",
+  "weather_light_freezing_drizzle": "약한 어는 이슬비",
+  "weather_dense_freezing_drizzle": "짙은 어는 이슬비",
+  "weather_light_freezing_rain": "약한 어는 비",
+  "weather_heavy_freezing_rain": "강한 어는 비"
 }

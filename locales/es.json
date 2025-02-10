@@ -62,5 +62,9 @@
   "month_november": "Noviembre",
   "month_december": "Diciembre",
   "weather_moderate_snowfall": "Nevadas moderadas",
-  "weather_heavy_snowfall": "Nevadas intensas"
+  "weather_heavy_snowfall": "Nevadas intensas",
+  "weather_light_freezing_drizzle": "Llovizna ligera congelante",
+  "weather_dense_freezing_drizzle": "Llovizna densa congelante",
+  "weather_light_freezing_rain": "Lluvia ligera congelante",
+  "weather_heavy_freezing_rain": "Lluvia intensa congelante"
 }

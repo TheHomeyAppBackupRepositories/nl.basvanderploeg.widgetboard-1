@@ -54,5 +54,9 @@
   "title": "Hallo Wereld",
   "greeting": "Hallo, __name__",
   "weather_moderate_snowfall": "Matige sneeuwval",
-  "weather_heavy_snowfall": "Hevige sneeuwval"
+  "weather_heavy_snowfall": "Hevige sneeuwval",
+  "weather_light_freezing_drizzle": "Lichte ijzelmotregen",
+  "weather_dense_freezing_drizzle": "Dichte ijzelmotregen",
+  "weather_light_freezing_rain": "Lichte ijzelregen",
+  "weather_heavy_freezing_rain": "Zware ijzelregen"
 }

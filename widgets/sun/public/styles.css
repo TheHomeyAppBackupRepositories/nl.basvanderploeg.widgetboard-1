@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap'); */
 
 html {
   overflow: hidden;
@@ -172,6 +172,36 @@ body {
 .sun-arrow {
   opacity: 0.5;
 }
+
+.sun-arrow-icon {
+  /* background-image: url('./img/arrow-up.svg'); */
+  background-color: none;
+  width: 20px;
+  height: 20px;
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+  background-position: center;
+  display:inline-block;
+  background-color: none;
+  vertical-align: top;
+  opacity: 0.5;
+}
+
+.sun-arrow-icon-small {
+  /* background-image: url('./img/arrow-up.svg'); */
+  background-color: none;
+  width: 17px;
+  height: 17px;
+  background-size: 12px 12px;
+  background-repeat: no-repeat;
+  background-position: center;
+  display:inline-block;
+  background-color: none;
+  vertical-align: top;
+}
+
+.arrow-up { background-image: url('./img/arrow-up.svg');}
+.arrow-down { background-image: url('./img/arrow-down.svg');}
 
 
 

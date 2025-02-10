@@ -53,5 +53,9 @@
   "month_november": "November",
   "month_december": "December",
   "weather_moderate_snowfall": "Måttligt snöfall",
-  "weather_heavy_snowfall": "Kraftigt snöfall"
+  "weather_heavy_snowfall": "Kraftigt snöfall",
+  "weather_light_freezing_drizzle": "Lätt underkylt duggregn",
+  "weather_dense_freezing_drizzle": "Tätt underkylt duggregn",
+  "weather_light_freezing_rain": "Lätt underkylt regn",
+  "weather_heavy_freezing_rain": "Kraftigt underkylt regn"
 }

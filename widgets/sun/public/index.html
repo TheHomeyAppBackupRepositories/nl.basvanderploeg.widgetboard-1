@@ -257,24 +257,24 @@
       const sunrise = todayTimes.sunrise;
       const sunset = todayTimes.sunset;
 
-      document.getElementById('sunriseTime').innerHTML = `${formatTime(sunrise)}<span class="sun-arrow">↑</span>`;
-      document.getElementById('sunsetTime').innerHTML = `<span class="sun-arrow">↓</span>${formatTime(sunset)}`;
+      document.getElementById('sunriseTime').innerHTML = `${formatTime(sunrise)}<span class="sun-arrow-icon arrow-up"></span>`;
+      document.getElementById('sunsetTime').innerHTML = `<span class="sun-arrow-icon arrow-down"></span>${formatTime(sunset)}`;
 
       let nextEvent, timeDiff, arrow;
 
       if (now > sunset) {
         nextEvent = tomorrowTimes.sunrise;
-        arrow = '↑';
+        arrow = '<span class="sun-arrow-icon-small arrow-up"></span>';
       } else if (now < sunrise) {
         nextEvent = sunrise;
-        arrow = '↑';
+        arrow = '<span class="sun-arrow-icon-small arrow-up"></span>';
       } else {
         nextEvent = sunset;
-        arrow = '↓';
+        arrow = '<span class="sun-arrow-icon-small arrow-down"></span>';
       }
 
       timeDiff = nextEvent - now;
-      document.getElementById('nextEventTime').textContent = `${arrow} ${formatTimeDiff(timeDiff)}`;
+      document.getElementById('nextEventTime').innerHTML = `${arrow} ${formatTimeDiff(timeDiff)}`;
     }
 
     function formatTimeDiff(timeDiff) {
